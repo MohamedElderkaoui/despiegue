@@ -8,7 +8,17 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         return http.server.SimpleHTTPRequestHandler.do_GET(self)
 
 Handler = MyHttpRequestHandler
+'''
 
+
+with socketserver.TCPServer(("", PORT), Handler) as httpd:
+    print("Http Server Serving at port", PORT)
+    httpd.serve_forever()
+
+
+
+
+'''
 with socketserver.TCPServer(("", PORT), Handler) as httpd:
     print("Http Server Serving at port", PORT)
     httpd.serve_forever()

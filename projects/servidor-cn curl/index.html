@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD con AJAX</title>
+    <style>
+        /* Estilos CSS para la página */
+        /* Puedes personalizar estos estilos según tus preferencias */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        #resource-list {
+            list-style: none;
+        }
+
+        #resource-list li {
+            margin-bottom: 10px;
+        }
+
+        button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CRUD con AJAX</h1>
+    
+    <!-- Formulario para crear un nuevo recurso -->
+    <h2>Crear Recurso</h2>
+    <form id="create-form">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" required>
+        <button type="submit">Crear</button>
+    </form>
+
+    <!-- Lista de recursos existentes -->
+    <h2>Recursos</h2>
+    <ul id="resource-list"></ul>
+
+    <!-- Script JavaScript para manejar las solicitudes AJAX -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Obtener la lista de recursos al cargar la página
+            fetchResources();
+
+            // Manejar el envío del formulario de creación
+            document.getElementById("create-form").addEventListener("submit", function (event) {
+                event.preventDefault();
+
+                const name = document.getElementById("name").value;
+
+                // Enviar una solicitud POST para crear un nuevo recurso
+                fetch("http://localhost:8000/recursos", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ nombre: name }),
+                })
+                .then(response => response.json())
+                .then(() => {
+                    // Limpiar el formulario y actualizar la lista de recursos
+                    document.getElementById("name").value = "";
+                    fetchResources();
+                })
+                .catch(error => console.error(error));
+            });
+        });
+
+        // Función para obtener y mostrar la lista de recursos
+        function fetchResources() {
+            fetch("http://localhost:8000/recursos")
+            .then(response => response.json())
+            .then(resources => {
+                const resourceList = document.getElementById("resource-list");
+                resourceList.innerHTML = "";
+
+                resources.forEach(resource => {
+                    const listItem = document.createElement("li");
+                    listItem.innerHTML = `
+                        ${resource.nombre}
+                        <button onclick="updateResource(${resource.id})">Actualizar</button>
+                        <button onclick="deleteResource(${resource.id})">Eliminar</button>
+                    `;
+                    resourceList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error(error));
+        }
+
+        // Función para actualizar un recurso
+        function updateResource(id) {
+            const newName = prompt("Ingrese el nuevo nombre:");
+            if (newName !== null) {
+                fetch(`http://localhost:8000/recursos/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ nombre: newName }),
+                })
+                .then(() => {
+                    fetchResources();
+                })
+                .catch(error => console.error(error));
+            }
+        }
+
+        // Función para eliminar un recurso
+        function deleteResource(id) {
+            if (confirm("¿Está seguro de que desea eliminar este recurso?")) {
+                fetch(`http://localhost:8000/recursos/${id}`, {
+                    method: "DELETE",
+                })
+                .then(() => {
+                    fetchResources();
+                })
+                .catch(error => console.error(error));
+            }
+        }
+    </script>
+</body>
+</html>
