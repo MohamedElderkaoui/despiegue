@@ -1,0 +1,56 @@
+srv:
+    py, httpserver...
+
+clientes:
+    curl
+    http protocolo: comandos?
+    GET
+    POST
+    PUT
+    DELETE
+
+? seria dificil ejemplificar un sistema 
+REST minimo con estos recursos?
+    No, no sería difícil ejemplificar un sistema REST mínimo con esos recursos. El modelo REST (Representational State Transfer) es una arquitectura de estilo que utiliza los métodos HTTP (GET, POST, PUT, DELETE) para interactuar con recursos a través de una API web. Puedes crear un sistema REST mínimo con solo un recurso y los métodos HTTP mencionados. Aquí tienes un ejemplo simple:
+
+Supongamos que estás creando una API REST para gestionar una lista de tareas (to-do list). Aquí tienes una implementación mínima:
+
+Recursos:
+1. Tareas
+
+Métodos HTTP y sus acciones asociadas:
+
+- GET /tareas: Obtiene la lista de todas las tareas.
+- POST /tareas: Crea una nueva tarea.
+- GET /tareas/{id}: Obtiene los detalles de una tarea específica por su ID.
+- PUT /tareas/{id}: Actualiza una tarea existente por su ID.
+- DELETE /tareas/{id}: Elimina una tarea por su ID.
+
+Ejemplos de cómo interactuar con esta API utilizando clientes como `curl`:
+
+1. Obtener la lista de tareas:
+```bash
+curl -X GET http://localhost:8080/tareas
+```
+
+2. Crear una nueva tarea:
+```bash
+curl -X POST -d "titulo=Nueva Tarea" http://localhost:8080/tareas
+```
+
+3. Obtener los detalles de una tarea específica (por ejemplo, tarea con ID 1):
+```bash
+curl -X GET http://localhost:8080/tareas/1
+```
+
+4. Actualizar una tarea existente (por ejemplo, tarea con ID 1):
+```bash
+curl -X PUT -d "titulo=Tarea Actualizada" http://localhost:8080/tareas/1
+```
+
+5. Eliminar una tarea (por ejemplo, tarea con ID 1):
+```bash
+curl -X DELETE http://localhost:8080/tareas/1
+```
+
+Este es un ejemplo muy básico de un sistema REST mínimo con un único recurso (tareas) y los métodos HTTP estándar. Por supuesto, en aplicaciones más complejas, habrá más recursos y acciones, pero esto te da una idea de cómo comenzar a diseñar una API REST.
