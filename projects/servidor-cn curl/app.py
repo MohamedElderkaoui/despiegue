@@ -60,6 +60,38 @@ class RequestHandler(BaseHTTPRequestHandler):
             else:
                 self._set_response(404)
                 self.wfile.write("Recurso no encontrado".encode())
+    
+    def do_CONNECT(self):
+        self._set_response(501)  # Método no implementado
+        self.wfile.write("Método CONNECT no implementado".encode())
+
+    def do_OPTIONS(self):
+        self._set_response()
+        self.send_header('Allow', 'GET, POST, PUT, DELETE, CONNECT, OPTIONS, TRACE, PATCH')
+        self.wfile.write("Método OPTIONS permitido".encode())
+
+    def do_TRACE(self):
+        self._set_response()
+        self.wfile.write("Método TRACE es compatible".encode())
+
+    def do_PATCH(self):
+        if self.path.startswith('/recurso/'):
+            resource_id = int(self.path.split('/')[2])
+            if resource_id in data:
+                content_length = int(self.headers['Content-Length'])
+                data_received = self.rfile.read(content_length)
+                patch_data = json.loads(data_received.decode())
+                for key, value in patch_data.items():
+                    data[resource_id][key] = value
+                data[resource_id]["id"] = resource_id
+                self._set_response()
+                self.wfile.write(json.dumps(data[resource_id]).encode())
+            else:
+                self._set_response(404)
+                self.wfile.write("Recurso no encontrado".encode())
+        else:
+            self._set_response(400)
+            self.wfile.write("Ruta no válida para el método PATCH".encode())
 
 def run():
     server_address = ('', 8000)
