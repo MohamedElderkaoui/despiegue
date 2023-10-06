@@ -35,7 +35,11 @@ class RequestHandler(BaseHTTPRequestHandler):
             data[new_id] = new_resource
             self._set_response(201)
             self.wfile.write(json.dumps(new_resource).encode())
+             # Save the modified data back to the JSON file
+        with open('j.json', 'w') as json_file:
+            json.dump(data, json_file, indent=4)
 
+            
     def do_PUT(self):
         if self.path.startswith('/recurso/'):
             resource_id = int(self.path.split('/')[2])
@@ -47,6 +51,10 @@ class RequestHandler(BaseHTTPRequestHandler):
                 data[resource_id] = updated_resource
                 self._set_response()
                 self.wfile.write(json.dumps(updated_resource).encode())
+                 # Save the modified data back to the JSON file
+                with open('j.json', 'w') as json_file:
+                    json.dump(data, json_file, indent=4)
+
             else:
                 self._set_response(404)
                 self.wfile.write("Recurso no encontrado".encode())
@@ -57,6 +65,11 @@ class RequestHandler(BaseHTTPRequestHandler):
             if resource_id in data:
                 del data[resource_id]
                 self._set_response(204)
+                
+                 # Save the modified data back to the JSON file
+                with open('j.json', 'w') as json_file:
+                    json.dump(data, json_file, indent=4)
+
             else:
                 self._set_response(404)
                 self.wfile.write("Recurso no encontrado".encode())
@@ -72,7 +85,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_TRACE(self):
         self._set_response()
-        self.wfile.write("Método TRACE es compatible".encode())
+        self.wfile.write("Método TRACE es compatible".encode()) 
 
     def do_PATCH(self):
         if self.path.startswith('/recurso/'):
