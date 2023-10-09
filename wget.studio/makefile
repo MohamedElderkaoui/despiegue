@@ -18,3 +18,15 @@ seelocal:
 
 # mkdir -p ./READMEfiles
 # wget -mpEk -np -r -l 2 -P ./READMEfiles -A html,css,jpeg,jpg,bmp,gif,png,pdf https://earthly.dev/blog/cmake-vs-make-diff/
+
+hello_age: hello.o age.o
+     g++ hello.o age.o -o hello_age
+    
+hello.o: hello.cpp
+     g++ -c hello.cpp
+    
+age.o: age.cpp
+     g++ -c age.cpp
+    
+clean:
+     rm *.o hello_age
